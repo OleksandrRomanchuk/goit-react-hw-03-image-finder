@@ -1,0 +1,16 @@
+/*
+ * Стили компонента App
+ */
+.App {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 16px;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 24px;
+}
+
+.Loader {
+    display: inline-block;
+    margin: 0 auto;
+}
