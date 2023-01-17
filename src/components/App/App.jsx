@@ -29,11 +29,10 @@ class App extends Component {
         const query = this.state.query;;
 
         const response = await fetchImages(query, page);
-        console.log('response: ', response);
         
         this.setState(prevState => ({ photos: [...prevState.photos, ...response.hits], status: ''}));
       } catch (error) {
-        console.log('error');
+        console.log(error);
       };
     };
   };
@@ -67,7 +66,7 @@ class App extends Component {
             modalOpen={this.toggleModal}
             getImageData={this.setChosenImage} />
           {this.state.status === 'pending'
-            ? <div className='loader'>
+            ? <div className={css.Loader}>
               <FallingLines
                 color="#3f51b5"
                 width="100"
