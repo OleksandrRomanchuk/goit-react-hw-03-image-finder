@@ -8,7 +8,6 @@ import css from './ImageGalleryItem.module.css';
 
 class ImageGalleryItem extends Component {
     static propTypes = {
-        [this.props]: PropTypes.shape({
             getImageData: PropTypes.func.isRequired,
             openModal: PropTypes.func.isRequired,
             photoData: PropTypes.shape({
@@ -16,7 +15,6 @@ class ImageGalleryItem extends Component {
                 webformatURL: PropTypes.string.isRequired,
                 tags: PropTypes.string.isRequired,
             }),
-        }),
     }
     
     handleImageClick = (event) => {

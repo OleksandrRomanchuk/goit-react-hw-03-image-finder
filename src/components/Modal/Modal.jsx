@@ -11,10 +11,8 @@ const modalPortal = document.getElementById('modal-root');
 
 class Modal extends Component {
     static propTypes = {
-        [this.props]: PropTypes.shape({
             modalToggle: PropTypes.func.isRequired,
             children: PropTypes.node.isRequired,
-        }),
     };
 
     componentDidMount() {

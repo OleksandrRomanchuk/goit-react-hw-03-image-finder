@@ -9,7 +9,7 @@ import css from './Searchbar.module.css';
 
 class Searchbar extends Component {
     static propTypes = {
-        onSubmit: PropTypes.func.isRequired,
+            onSubmit: PropTypes.func.isRequired,
     }
 
     onFormSubmit = (event) => {
