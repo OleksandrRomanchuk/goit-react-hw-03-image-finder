@@ -1,0 +1,8 @@
+.NotifyMessage {
+    margin-top: 120px;
+
+    font-size: 24px;
+
+    text-align: center;
+    color: rgba(0, 0, 0, 0.5);
+}
