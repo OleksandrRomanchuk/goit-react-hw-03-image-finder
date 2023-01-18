@@ -42,6 +42,7 @@ class App extends Component {
         console.log(error);
       };
     };
+    document.body.scrollIntoView({behavior: "smooth", block: "end"});
   };
 
   setNextPage = () => {
