@@ -2,10 +2,11 @@ import { fetchImages } from 'API/API';
 
 //========== components ==========
 import { Component } from 'react';
-import { FallingLines } from 'react-loader-spinner';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { Notification } from 'components/Notification/Notification';
 import { Button } from 'components/Button/Button';
+import { ThreeDots  } from 'react-loader-spinner';
 import { Modal } from 'components/Modal/Modal';
 
 //========== styles ==========
@@ -18,19 +19,25 @@ class App extends Component {
     query: null,
     isModal: false,
     largeImage: null,
-    status: 'pending',
+    isLoading: false,
+    notifyMessage: 'Enter a search query to get a photo.'
   };
 
   async componentDidUpdate(_, prevState) {
     if (prevState.query !== this.state.query || prevState.page !== this.state.page) {
-      this.setState({status: 'pending'})
+      this.setState({ isLoading: true, notifyMessage: '' });
+
       try {
         const page = this.state.page;
         const query = this.state.query;;
 
-        const response = await fetchImages(query, page);
+        const { hits } = await fetchImages(query, page);
         
-        this.setState(prevState => ({ photos: [...prevState.photos, ...response.hits], status: ''}));
+        if (hits.length === 0) {
+          this.setState({ notifyMessage: 'No photos were found for your request.' });
+        }
+        
+        this.setState(prevState => ({ photos: [...prevState.photos, ...hits], isLoading: false}));
       } catch (error) {
         console.log(error);
       };
@@ -42,42 +49,46 @@ class App extends Component {
   };
 
   setQuery = (string) => {
-    this.setState({ photos: [], query: string, page: 1});
-  }
+    this.setState({ photos: [], query: string, page: 1 });
+  };
 
   toggleModal = () => {
     this.setState(prevState => ({ isModal: !prevState.isModal }));
-  }
+  };
 
   setChosenImage = (imageData) => {
-    this.setState({largeImage: imageData})
-  }
+    this.setState({ largeImage: imageData })
+  };
 
   render() {
     const photos = this.state.photos;
     const largeImageData = this.state.largeImage;
+    const loading = this.state.isLoading;
 
     return (
       <div className={css.App}>
         <Searchbar onSubmit={this.setQuery} />
-        {photos[0] && <>
+        {photos[0] ? <>
           <ImageGallery
             items={photos}
             modalOpen={this.toggleModal}
             getImageData={this.setChosenImage} />
-          {this.state.status === 'pending'
-            ? <div className={css.Loader}>
-              <FallingLines
-                color="#3f51b5"
-                width="100"
-                visible={true}
-                ariaLabel='falling-lines-loading'
-              />
-            </div> : <Button
-              type="button"
-              label="Load more"
-              changePageNumber={this.setNextPage} />}
-        </>}          
+          {!loading && <Button
+            type="button"
+            label="Load more"
+            changePageNumber={this.setNextPage} />}
+        </> : <Notification message={this.state.notifyMessage} />}
+        {loading && <div className={css.Loader}>
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#4fa94d"
+            ariaLabel="three-dots-loading"
+            visible={true}
+          />
+        </div>}
+
         {this.state.isModal
           && <Modal
             modalToggle={this.toggleModal}>
