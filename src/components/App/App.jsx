@@ -32,12 +32,15 @@ class App extends Component {
         const query = this.state.query;;
 
         const { hits } = await fetchImages(query, page);
-        
+        const photosInfo = hits.map(({ id, largeImageURL, webformatURL, tags }) => {
+          return { id, largeImageURL, webformatURL, tags }
+        });
+
         if (hits.length === 0) {
           this.setState({ notifyMessage: 'No photos were found for your request.' });
         }
         
-        this.setState(prevState => ({ photos: [...prevState.photos, ...hits], isLoading: false}));
+        this.setState(prevState => ({ photos: [...prevState.photos, ...photosInfo], isLoading: false}));
       } catch (error) {
         console.log(error);
       };
@@ -46,7 +49,7 @@ class App extends Component {
   };
 
   setNextPage = () => {
-    this.setState({ page: this.state.page + 1 });
+    this.setState(prevState => ({ page: prevState.page + 1 }));
   };
 
   setQuery = (string) => {
@@ -57,8 +60,15 @@ class App extends Component {
     this.setState(prevState => ({ isModal: !prevState.isModal }));
   };
 
-  setChosenImage = (imageData) => {
-    this.setState({ largeImage: imageData })
+  setChosenImage = (event) => {
+    event.preventDefault();
+    const modalImageData = {
+      url: event.currentTarget.href,
+      alt: event.currentTarget.dataset.alt,
+    };
+
+    this.setState({ largeImage: modalImageData })
+    this.toggleModal();
   };
 
   render() {
