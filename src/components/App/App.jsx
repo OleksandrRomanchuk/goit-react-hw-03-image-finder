@@ -62,6 +62,7 @@ class App extends Component {
 
   setChosenImage = (event) => {
     event.preventDefault();
+    
     const modalImageData = {
       url: event.currentTarget.href,
       alt: event.currentTarget.dataset.alt,
